@@ -50,32 +50,29 @@ internal class SyntheticAccessorLowering(val context: JvmBackendContext) : IrEle
         inlineLambdaToCallSite.putAll(InlineReferenceLocator.scan(context, irFile).lambdaToCallSite)
 
         // Unconditionally add bridges for hidden constructors
-        irFile.transformChildrenVoid(object: IrElementTransformerVoid() {
-            private val hiddenDeclarations = mutableSetOf<IrConstructor>()
-
+        irFile.transformChildrenVoid(object : IrElementTransformerVoid() {
             private fun handleConstructor(declaration: IrConstructor): IrConstructorSymbol? {
-                if (declaration.shouldBeHidden) {
-                    declaration.visibility = Visibilities.PRIVATE
-                    hiddenDeclarations += declaration
-                }
+                functionMap[declaration.symbol]?.let { return it as IrConstructorSymbol }
 
-                if (declaration !in hiddenDeclarations)
+                if (!declaration.shouldBeHidden)
                     return null
 
-                return functionMap.getOrPut(declaration.symbol) {
-                    declaration.makeConstructorAccessor().also { accessor ->
-                        // There's a special case in the JVM backend for serializing the metadata of hidden
-                        // constructors - we serialize the descriptor of the original constructor, but the
-                        // signature of the bridge. We implement this special case in the JVM IR backend by
-                        // attaching the metadata directly to the bridge. We also have to move all annotations
-                        // to the bridge method. Parameter annotations are already moved by the copyTo method.
-                        accessor.metadata = declaration.metadata
-                        declaration.safeAs<IrConstructorImpl>()?.metadata = null
-                        accessor.annotations += declaration.annotations
-                        declaration.annotations.clear()
-                        declaration.valueParameters.forEach { it.annotations.clear() }
-                    }.symbol
-                } as IrConstructorSymbol
+                declaration.visibility = Visibilities.PRIVATE
+
+                return declaration.makeConstructorAccessor().also { accessor ->
+                    functionMap[declaration.symbol] = accessor.symbol
+
+                    // There's a special case in the JVM backend for serializing the metadata of hidden
+                    // constructors - we serialize the descriptor of the original constructor, but the
+                    // signature of the bridge. We implement this special case in the JVM IR backend by
+                    // attaching the metadata directly to the bridge. We also have to move all annotations
+                    // to the bridge method. Parameter annotations are already moved by the copyTo method.
+                    accessor.metadata = declaration.metadata
+                    declaration.safeAs<IrConstructorImpl>()?.metadata = null
+                    accessor.annotations += declaration.annotations
+                    declaration.annotations.clear()
+                    declaration.valueParameters.forEach { it.annotations.clear() }
+                }.symbol
             }
 
             override fun visitConstructor(declaration: IrConstructor): IrStatement {
