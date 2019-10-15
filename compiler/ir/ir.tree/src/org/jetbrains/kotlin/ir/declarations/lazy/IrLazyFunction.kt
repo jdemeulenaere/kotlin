@@ -31,12 +31,13 @@ class IrLazyFunction(
     override val modality: Modality,
     isInline: Boolean,
     isExternal: Boolean,
+    isExpect: Boolean,
     override val isTailrec: Boolean,
     override val isSuspend: Boolean,
     stubGenerator: DeclarationStubGenerator,
     typeTranslator: TypeTranslator
 ) :
-    IrLazyFunctionBase(startOffset, endOffset, origin, name, visibility, isInline, isExternal, stubGenerator, typeTranslator),
+    IrLazyFunctionBase(startOffset, endOffset, origin, name, visibility, isInline, isExternal, isExpect, stubGenerator, typeTranslator),
     IrSimpleFunction {
 
     constructor(
@@ -55,6 +56,7 @@ class IrLazyFunction(
         symbol.descriptor.isExternal,
         symbol.descriptor.isTailrec,
         symbol.descriptor.isSuspend,
+        symbol.descriptor.isExpect,
         stubGenerator,
         TypeTranslator
     )

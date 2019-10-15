@@ -30,10 +30,11 @@ class IrFunctionImpl(
     returnType: IrType,
     isInline: Boolean,
     isExternal: Boolean,
+    isExpect: Boolean,
     override val isTailrec: Boolean,
     override val isSuspend: Boolean
 ) :
-    IrFunctionBase(startOffset, endOffset, origin, name, visibility, isInline, isExternal, returnType),
+    IrFunctionBase(startOffset, endOffset, origin, name, visibility, isInline, isExternal, isExpect, returnType),
     IrSimpleFunction {
 
     constructor(
@@ -53,7 +54,8 @@ class IrFunctionImpl(
         symbol.descriptor.isInline,
         symbol.descriptor.isExternal,
         symbol.descriptor.isTailrec,
-        symbol.descriptor.isSuspend
+        symbol.descriptor.isSuspend,
+        symbol.descriptor.isExpect
     )
 
     override val descriptor: FunctionDescriptor = symbol.descriptor

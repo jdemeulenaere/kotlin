@@ -34,6 +34,7 @@ abstract class IrFunctionBase(
     override val visibility: Visibility,
     override val isInline: Boolean,
     override val isExternal: Boolean,
+    override val isExpect: Boolean,
     returnType: IrType
 ) :
     IrDeclarationBase(startOffset, endOffset, origin),

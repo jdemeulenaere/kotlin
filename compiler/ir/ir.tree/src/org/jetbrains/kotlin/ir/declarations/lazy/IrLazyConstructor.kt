@@ -27,13 +27,14 @@ class IrLazyConstructor(
     visibility: Visibility,
     isInline: Boolean,
     isExternal: Boolean,
+    isExpect: Boolean,
     override val isPrimary: Boolean,
     stubGenerator: DeclarationStubGenerator,
     typeTranslator: TypeTranslator
 ) :
     IrLazyFunctionBase(
         startOffset, endOffset, origin, name,
-        visibility, isInline, isExternal,
+        visibility, isInline, isExternal, isExpect,
         stubGenerator, typeTranslator
     ),
     IrConstructor {
@@ -52,6 +53,7 @@ class IrLazyConstructor(
         symbol.descriptor.isInline,
         symbol.descriptor.isEffectivelyExternal(),
         symbol.descriptor.isPrimary,
+        symbol.descriptor.isExpect,
         stubGenerator,
         TypeTranslator
     )
