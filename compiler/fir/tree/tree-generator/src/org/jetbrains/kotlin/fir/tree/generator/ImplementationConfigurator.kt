@@ -417,6 +417,7 @@ object ImplementationConfigurator : AbstractFirTreeImplementationConfigurator() 
 
         impl(whenExpression) {
             default("calleeReference", "FirStubReference()")
+            defaultFalse("isExhaustive")
             useTypes(stubReferenceType)
         }
 

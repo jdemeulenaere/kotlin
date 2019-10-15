@@ -35,8 +35,6 @@ FILE: recursiveCallOnWhenWithSealedClass.kt
                 ($subj$ is R|Maybe.Yeah|) ->  {
                     this@R|/Maybe.Yeah|.R|/Maybe.Yeah.meat|
                 }
-                else ->  {
-                }
             }
 
         }
