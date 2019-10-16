@@ -450,7 +450,6 @@ abstract class KotlinAndroid3GradleIT : AbstractKotlinAndroidGradleTests() {
         File(project.projectDir, "Lib/build.gradle").modify { text ->
             // Change the applied plugin to com.android.feature
             text.replace("com.android.library", "com.android.feature")
-                .replace("compileSdkVersion 22", "compileSdkVersion 26")
                 .apply { assert(!equals(text)) }
                 .plus("\nandroid { baseFeature true }")
         }

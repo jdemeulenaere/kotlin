@@ -208,6 +208,7 @@ abstract class BaseGradleIT {
         val androidHome: File? = null,
         val javaHome: File = JDK_18_HOME,
         val androidGradlePluginVersion: AGPVersion? = null,
+        val androidSdkVersion: Int = 26,
         val forceOutputToStdout: Boolean = false,
         val debug: Boolean = false,
         val freeCommandLineArgs: List<String> = emptyList(),
@@ -760,6 +761,7 @@ Finished executing task ':$taskName'|
             options.incrementalJs?.let { add("-Pkotlin.incremental.js=$it") }
             options.usePreciseJavaTracking?.let { add("-Pkotlin.incremental.usePreciseJavaTracking=$it") }
             options.androidGradlePluginVersion?.let { add("-Pandroid_tools_version=$it") }
+            add("-Pandroid_sdk_version=${options.androidSdkVersion}")
             if (options.debug) {
                 add("-Dorg.gradle.debug=true")
             }

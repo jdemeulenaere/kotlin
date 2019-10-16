@@ -4,7 +4,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 22
+    compileSdkVersion android_sdk_version
 
     sourceSets {
         main.java.srcDirs += 'src/main/java2'
@@ -14,7 +14,7 @@ android {
 
     defaultConfig {
         minSdkVersion 7
-        targetSdkVersion 22
+        targetSdkVersion android_sdk_version
     }
 
     flavorDimensions "myFlavor"
@@ -40,25 +40,8 @@ android {
     lintOptions.abortOnError = false
 }
 
-if (VersionNumber.parse(android_tools_version) < VersionNumber.parse("3.0.0-alpha1")) {
-    configurations {
-        flavor1DebugCompile
-        flavor1ReleaseCompile
-        flavor2DebugCompile
-        flavor2ReleaseCompile
-    }
-
-    dependencies {
-        flavor1DebugCompile project(path: ':Lib', configuration: 'flavor1Debug')
-        flavor1ReleaseCompile project(path: ':Lib', configuration: 'flavor1Release')
-        flavor2DebugCompile project(path: ':Lib', configuration: 'flavor2Debug')
-        flavor2ReleaseCompile project(path: ':Lib', configuration: 'flavor2Release')
-    }
-}
-else {
-    dependencies {
-        compile project(":Lib")
-    }
+dependencies {
+    compile project(":Lib")
 }
 
 dependencies {

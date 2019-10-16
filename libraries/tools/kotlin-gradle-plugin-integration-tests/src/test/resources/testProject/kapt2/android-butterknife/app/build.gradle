@@ -3,12 +3,12 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion android_sdk_version
 
     defaultConfig {
         applicationId "org.example.kotlin.butterknife"
         minSdkVersion 15
-        targetSdkVersion 23
+        targetSdkVersion android_sdk_version
         versionCode 1
         versionName "1.0"
     }

@@ -17,12 +17,12 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion android_sdk_version
 
     defaultConfig {
         applicationId "com.example.dagger.kotlin"
         minSdkVersion 14
-        targetSdkVersion 23
+        targetSdkVersion android_sdk_version
         versionCode 1
         versionName "1.0"
         buildConfigField "long", "BUILD_TIME_MILLIS", "${System.currentTimeMillis()}L"
