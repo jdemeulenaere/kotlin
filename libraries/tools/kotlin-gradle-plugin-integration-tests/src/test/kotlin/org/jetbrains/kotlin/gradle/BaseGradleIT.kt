@@ -27,6 +27,7 @@ import kotlin.test.*
 
 val SYSTEM_LINE_SEPARATOR: String = System.getProperty("line.separator")
 const val TEST_GRADLE_JVM_ARGS = "-Xmx1024m -XX:MaxMetaspaceSize=512m"
+const val TEST_GRADLE_IDLE_TIMEOUT_MS = 60_000 // 1 minute
 const val TEST_KOTLIN_NATIVE_JVM_ARGS = "-Xmx1500m -XX:MaxMetaspaceSize=512m"
 
 @GradleTestsRootClass
@@ -255,6 +256,7 @@ abstract class BaseGradleIT {
             copyRecursively(this.resourcesRoot, workingDir)
             withProperties(projectDir.resolve("gradle.properties")) { gradleProperties ->
                 gradleProperties["org.gradle.jvmargs"] = TEST_GRADLE_JVM_ARGS
+                gradleProperties["org.gradle.daemon.idletimeout"] = TEST_GRADLE_IDLE_TIMEOUT_MS.toString()
                 gradleProperties[KOTLIN_NATIVE_JVM_ARGS_PROPERTY] = TEST_KOTLIN_NATIVE_JVM_ARGS
             }
         }
