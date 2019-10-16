@@ -11,18 +11,33 @@ import org.jetbrains.kotlin.descriptors.FunctionDescriptor
 import org.jetbrains.kotlin.diagnostics.Errors
 import org.jetbrains.kotlin.psi.KtDeclaration
 import org.jetbrains.kotlin.psi.KtNamedFunction
+import org.jetbrains.kotlin.psi.KtParameter
+import org.jetbrains.kotlin.resolve.BindingContext
+import org.jetbrains.kotlin.resolve.DescriptorToSourceUtils
 import org.jetbrains.kotlin.resolve.isEffectivelyFinal
 
 object TailrecFunctionChecker : DeclarationChecker {
     override fun check(declaration: KtDeclaration, descriptor: DeclarationDescriptor, context: DeclarationCheckerContext) {
         if (declaration !is KtNamedFunction || descriptor !is FunctionDescriptor || !descriptor.isTailrec) return
 
-        if (descriptor.isEffectivelyFinal(false)) return
+        if (!descriptor.isEffectivelyFinal(false)) {
 
-        if (!context.languageVersionSettings.supportsFeature(LanguageFeature.ProhibitTailrecOnVirtualMember)) {
-            context.trace.report(Errors.TAILREC_ON_VIRTUAL_MEMBER.on(declaration))
-        } else {
-            context.trace.report(Errors.TAILREC_ON_VIRTUAL_MEMBER_ERROR.on(declaration))
+            if (!context.languageVersionSettings.supportsFeature(LanguageFeature.ProhibitTailrecOnVirtualMember)) {
+                context.trace.report(Errors.TAILREC_ON_VIRTUAL_MEMBER.on(declaration))
+            } else {
+                context.trace.report(Errors.TAILREC_ON_VIRTUAL_MEMBER_ERROR.on(declaration))
+            }
+        }
+
+        val defaultValues = descriptor.valueParameters.filter { it.declaresDefaultValue() }.filter {
+            val declaration = DescriptorToSourceUtils.descriptorToDeclaration(it)
+            if (declaration is KtParameter) {
+                context.trace.bindingContext.get(BindingContext.COMPILE_TIME_VALUE, declaration.defaultValue)?.isPure != true
+            } else true
+        }
+
+        if (defaultValues.size > 1) {
+            context.trace.report(Errors.TAILREC_WITH_DEFAULTS.on(declaration))
         }
     }
 }
