@@ -9,5 +9,5 @@ import java.io.File
 
 val GRADLE_HOME_FOR_TESTS = File(notNullSystemProperty("gradle.for.tests.user.home"))
 
-private fun notNullSystemProperty(prop: String): String =
+fun notNullSystemProperty(prop: String): String =
     System.getProperty(prop) ?: error("System property '$prop' is not set")

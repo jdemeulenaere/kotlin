@@ -69,7 +69,7 @@ gradle.taskGraph.whenReady {
     }
 }
 
-configureCommonTasks()
+configureCommonTasks(gradle.gradleUserHomeDir)
 
 testsJar {}
 
@@ -107,7 +107,7 @@ fun configureGeneratedTestsSubProject(relativePath: String, gradleHomeDirName: S
     }
 }
 
-fun Project.configureCommonTasks(gradleHome: File? = null) {
+fun Project.configureCommonTasks(gradleHome: File) {
     // Aapt2 from Android Gradle Plugin 3.2 and below does not handle long paths on Windows.
     val shortenTempRootName = System.getProperty("os.name")!!.contains("Windows")
 
@@ -152,6 +152,8 @@ fun Project.configureCommonTasks(gradleHome: File? = null) {
 
         systemProperty("kotlinVersion", rootProject.extra["kotlinVersion"] as String)
         systemProperty("runnerGradleVersion", gradle.gradleVersion)
+        systemProperty("runnerGradleUserHome", gradle.gradleUserHomeDir)
+        systemProperty("runnerGradleJavaHome", System.getProperties().getProperty("java.home"))
         systemProperty("jdk9Home", rootProject.extra["JDK_9"] as String)
         systemProperty("jdk10Home", rootProject.extra["JDK_10"] as String)
         systemProperty("jdk11Home", rootProject.extra["JDK_11"] as String)
